@@ -1,0 +1,12 @@
+__pycache__
+progs/__pycache__
+*.ipynb
+*.log
+*.aux
+*_latexmk
+*.fls
+*.pdf
+data/lixo/*
+*.swp
+.ipynb_checkpoints
+*.ods#

@@ -1,0 +1,22 @@
+// Generates Io immersion and emmersion Magnitude curves
+// Before starting the script, date and time must be set to 14 seconds before start of ocurrence
+LandscapeMgr.setFlagLandscape(false);
+LandscapeMgr.setFlagAtmosphere(false);
+core.setMountMode("equatorial");
+core.setTimeRate(0)
+core.resetOutput();
+for (i=0; i<278; i++)
+{
+	core.wait(0.07);
+	var imag = core.getObjectInfo("Io").vmag;
+	var dist = core.getObjectInfo("Jupiter").distance;
+	var time = core.getDate();
+	core.output(time + "   " + imag + "   " + dist);
+	core.setDate("+  1 seconds");
+	oldmag=imag;
+}
+
+// Io's orbital sidereal period: 2547,558412 min
+// core.setDate("+2547.56 minutes")
+
+// core.output(core.getObjectInfo("Jupiter").distance+"     "+core.getObjectInfo("Io").distance)
