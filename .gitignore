@@ -4,9 +4,11 @@ progs/__pycache__
 *.log
 *.aux
 *_latexmk
+*.synctex.gz
 *.fls
 *.pdf
 data/lixo/*
 *.swp
 .ipynb_checkpoints
 *.ods#
+*.png

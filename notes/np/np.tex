@@ -1,13 +1,25 @@
 \documentclass[]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[portuges]{babel}
-\usepackage[a4paper]{geometry}
-\usepackage{icomma, amsmath, multirow}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{icomma, amsmath, multirow, graphicx}
+\title{R{\o}mer no stellarium}
+\author{}
+
 \begin{document}
-\section{Descrição dos vários métodos usados}
+\maketitle
+
+\abstract
+\noindent
+Tentou-se determinar o valor da velocidade da luz com diferentes métodos
+inspirados no de R{\o}mer usando ``observações'' feitas no stellarium. Os
+resultados parecem ser dececionantemente imprecisos.
+
+
+\section{Introdução}
 Seja $\tilde t$ o instante em que se dá uma ocultação ou emersão de Io na sombra
-de Júpiter e $t$ o instante em que ela é observada na Terra. Obviamente, a
-relação entre estes dois instantes é
+de Júpiter e $t$ o instante em que ela é observada na Terra. A relação entre
+estes dois instantes é
 \begin{equation}
   t=\tilde t+\frac{\tilde d}{c},
 \end{equation}
@@ -18,23 +30,26 @@ separa a Terra de Júpiter no momento da observação. O erro cometido terá, em
 termos relativos, a ordem de grandeza da proporção entre o raio orbital de Io e
 a distância Terra-Júpiter, cujo valor máximo ronda os $7,5\times10^{-4}$.
 
-O intervalo de tempo entre a observação de duas ocultações ou duas emersões de
-Io na mesma fase de aproximação ou regressão da Terra a Júpiter, entre as quais
-Io complete $n$ revoluções é então
+Faz-se a suposição de que o intervalo entre duas ocultações ou emersões
+sucessivas de Io tem duração muito aproximadamente constante $\tilde T$ que será
+identificada com o seu período orbital médio.  (Atenção, refere-se aqui o
+\emph{intervalo entre os eventos,} não o intervalo entre as suas
+\emph{observações} na Terra). Então, a duração do intervalo de tempo entre a
+observação de duas ocultações ou duas emersões de Io na mesma fase de
+aproximação ou regressão da Terra a Júpiter, entre as quais Io complete $n$
+revoluções, é então
 \begin{equation}\label{eq:aa}
   t_n-t_0=\tilde t_n-\tilde t_0 + \frac{d_n-d_0}{c}=n\tilde T+
-  \frac{d_n-d_0}{c},
+  \frac{d_n-d_0}{c}.
 \end{equation}
-onde $\tilde T$ é o período orbital (creio que sinódico, mas também não tem
-muita importância em termos de exatidão do cálculo) de Io.
 
+\section{Métodos usados}
 \subsection{Método simples}
-Considerando um quarteto de eventos formado por dois pares (o par $(a)$ e o par
-$(b)$) de duas emersões, de
-duas oculta\-ções, ou de duas emersões e duas ocultações, mas escolhidos os dois
-pares de forma a que o número de revoluções de Io entre as duas ocorrências de
-cada par seja iguais, podemos eliminar o termo em $\tilde T$ na
-eq.~\eqref{eq:aa}, resultando para $c$
+Considerando um quarteto de eventos formado por dois pares $(a)$ e $(b)$ de duas
+emersões, de duas oculta\-ções, ou de duas emersões e duas ocultações, mas
+escolhidos os dois pares de forma a que o número de revoluções de Io entre as
+duas ocorrências de cada par seja iguais, podemos eliminar o termo em $\tilde T$
+na eq.~\eqref{eq:aa}, resultando para $c$
 \begin{equation}\label{eq:bb}
   c=\frac%
   {\left(d^{(a)}_n-d^{(a)}_0\right)-\left(d^{(b)}_n-d^{(b)}_0\right)}%
@@ -42,9 +57,13 @@ eq.~\eqref{eq:aa}, resultando para $c$
 \end{equation}
  É de esperar que se o quarteto de eventos for formado por dois pares
 de emersões ou dois pares de ocultações, ocorra um quase cancelamento da
-diferença no denominador, o que resulta numa amplificação de erros no numerador.
+diferença no denominador, o que resulta numa amplificação de erros do numerador.
 Por isso mesmo, este método será usado considerando sempre um quarteto de
-eventos formado por um par de emersões e um par de ocultações.
+eventos formado por um par de emersões e um par de ocultações.%
+\footnote{Este método, adotando pares de emersões e ocultações próximas das
+  conjunções e oposições de Júpiter, é frequentemente apresentado como tendo
+  sido o usado por R{\o}mer na sua comunicação à Academie Royale des Sciences em
+1676.}
 
 \subsection{Regressão com pares}
 Podemos reescrever a eq.~\eqref{eq:aa} como
@@ -56,7 +75,7 @@ durações (ou seja, números de revoluções de Io) arbitrários e construindo 
 gráfico cujas abcissas e ordenadas correspondam, respetivamente, aos valores de
 $(d_n-d_0)/n$ e de $(t_n-t_0)/n$ de cada intervalo, o declive da reta que
 melhor se ajusta aos diferentes pontos é uma estimativa do inverso de $c$, e a
-sua ordenada na origem do período orbita de Io.
+sua ordenada na origem do período orbital de Io.
 
 \subsection{Regressão com quartetos}
 Rescrevemos a eq.~\eqref{eq:bb} na forma
@@ -75,7 +94,7 @@ estimativa da velocidade da luz (ou do seu inverso, consoante o que escolhermos
 como abcissas ou ordenadas.
 
 \subsection{Batota!}
-A ideia é usar o Stellarium para determinar as distâncias e os tempos a usar nas
+A ideia é usar o stellarium para determinar as distâncias e os tempos a usar nas
 expressões dos métodos descritos acima. Mas o stellarium permite ainda uma outra
 possibilidade, que consiste em observar o mesmo evento (ocultação ou emersão de
 Io) visto da Terra e de Júpiter e estimar $c$ considerando a distância
@@ -86,12 +105,18 @@ nos dois locais.
 Usando um script stellarium, foram geradas curvas de magnitude como função do
 tempo para todas as ocultações e emersões de Io durante o ano sinódico de
 Júpiter de 2024-12-08 a 2026-01-08. O momento central de cada evento e a
-distância a Júpiter nesse instante foram estimados por interpolação. 
+distância a Júpiter nesse instante foram estimados por interpolação. Estes
+valores estão disponíveis para todas as emersões e ocultações de Io no ano
+sinódico referido.
 
 Tentou-se repetir os cálculos para outros anos sinódicos mas, considerando
 apenas eventos extremos (mais próximos das oposições e das ocultações)
 aplicou-se um procedimento mais rápido em que apenas se fez uma
-aproximação ao segundo mais próximo da magnitude central de cada evento.
+aproximação ao segundo mais próximo da magnitude central de cada evento. As
+datas dos eventos foram determinadas para o período de 2020-07-14 a 2024-12-07,
+mas as horas e, ainda menos, as distâncias a Júpiter não foram determinadas para
+a grande maioria das ocorrências.
+
 
 \section{Resultados obtidos}
 \subsection{Batota!}
@@ -120,12 +145,11 @@ momento da observação na Terra (em UA) e estimativa de $c$.}
 Em cada ano
 sinódico de Júpiter, consideraram-se quartetos de eventos extremos, isto é, o
 mais próximos possíveis dos momentos das conjunções e oposições de Júpiter, mas
-garantindo que o número de ocultações ou emerções compreendidas em cada par era
-o mesmo, cuidado indipensável para a validade do método.\footnote{Esta opção
-  parece ser a que mais frequentemente é apresentada como tendo sido a usada por
-R{\o}mer na sua comunicação à Academie Royale des Sciences em 1676.} Se os valores mais recuados
-parecem mais ou menos razoáveis, os calculados em anos sinódicos mais recentes,
-estão gravemente exagerados.
+garantindo que o número de ocultações ou emersões compreendidas em cada par era
+o mesmo, cuidado indipensável para a validade do método.
+Os
+valores mais recuados no tempo estão relativamente próximos do valor correto,
+mas, os calculados em anos sinódicos mais recentes estão gravemente exagerados.
 \begin{table}[htb]
   \begin{center}
     \begin{tabular}{lccccc}
@@ -169,6 +193,12 @@ estão gravemente exagerados.
       emrs  & 2023-11-04 08:58:06 & 3,983335
             & 2024-05-18 20:14:25 & 6,027377\\
       \hline
+      emrs  & 2024-12-08 09:01:31 & 4,089971
+            & 2025-06-22 20:11:59 & 6,158122
+            & \multirow{2}{*}{3,8818}\\
+      ocul  & 2025-06-26 06:55:04 & 6.159594
+            & 2026-01-08 17:39:52 & 4.231754\\
+      \hline
     \end{tabular}
   \end{center}
   \caption{\label{tab:bb} Valores da velocidade da luz obtidos com o método simples,
@@ -180,7 +210,53 @@ estão gravemente exagerados.
 
 
 \subsection{Regressão com pares}
+Aplicou-se o método de regressão com pares com os pares de eventos formados com
+o evento inicial e com cada um dos restantes, para as séries de emersões e de
+ocultações no período sinódico de 2024-12-07 (oposição) até (2026-01-10). Os
+resultados estão apresentados nos gráficos da Figura~\ref{fig:aa}. Os valores de
+$c$ resultantes são $4,564\times10^8$\,m/s e $4,307\times10^8$\,m/s,
+repetivamente para a série de pares de emersões e para a de pares de ocultações.
+\begin{figure}[htb]
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{c_rpairs.png}
+  \end{center}
+  \caption{\label{fig:aa} Resultados do método da regressão com pares. Gráficos
+    de $\delta d/n$ (em UA) e de $\delta t/n$ (em s), para a série de emersões
+    (à esquerda) e de ocultações (direita) no período 2024-12-07 a 2026-01-10.
+    Os pares usados no cálculo foram todos formados com o evento inicial de cada
+    série. Os valores resultantes para a velocidade da luz são
+  $4,564\times10^8$\,m/s (emersões) e $4,307\times10^8$\,m/s (ocultações).}
+\end{figure}
 \subsection{Regressão com quartetos}
+A Figura~\ref{fig:bb} mostra o gráfico obtido considerando quartetos do período
+2024-12-07 a 2026-01-10. Os pares de cada quarteto têm amplitudes variando entre
+10 e 97 revoluções de Io, todos centrados nas quadraturas das respetivas fases
+(regressão ou aproximação).
+\begin{figure}[htb]
+  \begin{center}
+    \includegraphics[width=0.7\textwidth]{c_rquart.png}
+  \end{center}
+  \caption{\label{fig:bb}Resultado do método da regressão com quartetos. Para
+  cada ponto, são usadas duas emersões e duas ocultações, definindo intervalos
+  temporais centrados na quadratura da fase respetiva, com amplitudes variáveis
+  entre a duraação de 10 a 97 revoluções de Io. O valor resultante para $c$ é
+$3,928\times10^8$\,m/s.}
+\end{figure}
+O valor da velocidade da luz obtido a partir do declive da reta de ajuste é
+$3,928\times10^8\,$m/s.
+
+\section{Questões}
+\begin{enumerate}
+  \item A que se deve a inexatidão destes resultados? A erros do stellarium? Ou
+    a algum efeito ou correção observacional que não estou a considerar?
+  \item É relevante que o método batota! seja bastante mais exato que os
+    restantes?
+  \item Como usar tabelas de efemérides (como as geradas com o sistema Horyzons
+    da NASA e JPL) para determinar os instantes das emersões e ocultaações de
+    Io?  (Ou deverei antes dizer das \emph{observações} desses efeitos?)
+\end{enumerate}
+
+\section{Período sinódico de Io no stellarium}
 \end{document}
 
 
