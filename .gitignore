@@ -1,6 +1,5 @@
 __pycache__
 progs/__pycache__
-*.ipynb
 *.log
 *.aux
 *_latexmk
@@ -8,6 +7,7 @@ progs/__pycache__
 *.fls
 *.pdf
 data/lixo/*
+progs/lixo
 *.swp
 .ipynb_checkpoints
 *.ods#
