@@ -1,11 +1,12 @@
 \documentclass[]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[portuges]{babel}
-\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage[a4paper]{geometry}
 \usepackage{icomma, amsmath, multirow, graphicx}
 \title{R{\o}mer no stellarium}
 \author{}
 
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
 \begin{document}
 \maketitle
 
@@ -28,7 +29,11 @@ momento da ocorrência e a posição da Terra no momento da observação. Por ra
 de simplicidade, é feita a aproximação de substituir esta distância pela que
 separa a Terra de Júpiter no momento da observação. O erro cometido terá, em
 termos relativos, a ordem de grandeza da proporção entre o raio orbital de Io e
-a distância Terra-Júpiter, cujo valor máximo ronda os $7,5\times10^{-4}$.
+a distância Terra-Júpiter, cujo valor máximo ronda os
+$7,5\times10^{-4}$.\footnote{Usando um modelo simplificado do sistema
+  Terra-Júpiter-Io, com órbitas circulares e coplanares, já verifiquei que o
+  erro introduzido por esta aproximação é, de facto,
+muito pequeno.}
 
 Faz-se a suposição de que o intervalo entre duas ocultações ou emersões
 sucessivas de Io tem duração muito aproximadamente constante $\tilde T$ que será
@@ -43,13 +48,13 @@ revoluções, é então
   \frac{d_n-d_0}{c}.
 \end{equation}
 
-\section{Métodos usados}
+\section{Métodos}
 \subsection{Método simples}
 Considerando um quarteto de eventos formado por dois pares $(a)$ e $(b)$ de duas
-emersões, de duas oculta\-ções, ou de duas emersões e duas ocultações, mas
-escolhidos os dois pares de forma a que o número de revoluções de Io entre as
-duas ocorrências de cada par seja iguais, podemos eliminar o termo em $\tilde T$
-na eq.~\eqref{eq:aa}, resultando para $c$
+emersões, de duas oculta\-ções, ou um par emersões e outro de ocultações, mas
+escolhidos os dois pares de forma em todos os casos a que o número de revoluções
+de Io entre as duas ocorrências de cada par seja iguais, podemos eliminar o
+termo em $\tilde T$ na eq.~\eqref{eq:aa}, resultando para $c$
 \begin{equation}\label{eq:bb}
   c=\frac%
   {\left(d^{(a)}_n-d^{(a)}_0\right)-\left(d^{(b)}_n-d^{(b)}_0\right)}%
@@ -68,7 +73,8 @@ eventos formado por um par de emersões e um par de ocultações.%
 \subsection{Regressão com pares}
 Podemos reescrever a eq.~\eqref{eq:aa} como
 \begin{equation}
-  \frac{t_n-t_0}{n}=\tilde T+\frac{1}{c}\frac{d_n-d_0}{n}.
+  \left[\frac{t_n-t_0}{n}\right]=\tilde T+
+  \frac{1}{c}\left[\frac{d_n-d_0}{n}\right].
 \end{equation}
 Considerando vários pares de emersões ou de ocultações definindo intervalos com
 durações (ou seja, números de revoluções de Io) arbitrários e construindo um
@@ -91,15 +97,22 @@ Rescrevemos a eq.~\eqref{eq:bb} na forma
 O declive da reta que melhor se ajusta aos pontos de um gráfico cujas abcissas e
 ordenadas sejam os valores das diferenças entre parêntesis retos é uma
 estimativa da velocidade da luz (ou do seu inverso, consoante o que escolhermos
-como abcissas ou ordenadas.
+como abcissas ou ordenadas).
 
 \subsection{Batota!}
 A ideia é usar o stellarium para determinar as distâncias e os tempos a usar nas
-expressões dos métodos descritos acima. Mas o stellarium permite ainda uma outra
-possibilidade, que consiste em observar o mesmo evento (ocultação ou emersão de
-Io) visto da Terra e de Júpiter e estimar $c$ considerando a distância
-Terra-Júpiter e a diferença temporal entre os instantes de observação do evento
-nos dois locais.
+expressões dos métodos descritos acima, substituindo valores que poderiam em
+princípio resultar de observações em feitas em observatórios. Mas o stellarium
+permite ainda uma outra possibilidade, que consiste em observar o mesmo evento
+(ocultação ou emersão de Io) visto da Terra e de Júpiter e estimar $c$
+considerando a distância Terra-Júpiter e a diferença temporal entre os instantes
+de observação do evento nos dois locais, ou seja, atraveś de:
+\begin{equation}
+  c=\frac{d}{t_T-t_J},
+\end{equation}
+onde $d$ é a distância Terra Júpiter e $d_T$ e $D_J$ são os instantes em que o
+mesmo evento (emersão ou ocultação) é observado na Terra e em Júpiter,
+respetivamente.
 
 \section{Determinação dos eventos com o stellarium}
 Usando um script stellarium, foram geradas curvas de magnitude como função do
@@ -110,20 +123,27 @@ valores estão disponíveis para todas as emersões e ocultações de Io no ano
 sinódico referido.
 
 Tentou-se repetir os cálculos para outros anos sinódicos mas, considerando
-apenas eventos extremos (mais próximos das oposições e das ocultações)
+apenas eventos extremos (mais próximos das oposições e das ocultações),
 aplicou-se um procedimento mais rápido em que apenas se fez uma
 aproximação ao segundo mais próximo da magnitude central de cada evento. As
 datas dos eventos foram determinadas para o período de 2020-07-14 a 2024-12-07,
-mas as horas e, ainda menos, as distâncias a Júpiter não foram determinadas para
-a grande maioria das ocorrências.
+mas os tempos e, ainda menos, as distâncias a Júpiter não foram ainda
+determinadas para a grande maioria das ocorrências.
 
+O stellarium fornece diretamente a magnitude do, e distância ao, corpo celeste
+selecionado com pouca precisão (a primeira com 4 algarismos significativos e
+a segunda com seis), mas os valores usados foram sempre obtidos usando
+scripts, que apresentam valores com cerca de 15 algarismos significativos). Os
+tempos usados nos cálculos foram também obtidos por scripts stellarium, não
+lidos visualmente do programa, e por isso estão todos expressos em UTM, sem
+necessidade de correções de hora de verão ou outras.
 
-\section{Resultados obtidos}
+\section{Resultados}
 \subsection{Batota!}
 Na Tabela~\ref{tab:aa} apresentam-se os dados relativos a duas emersões e duas
 ocultações escolhidas arbitrariamente, e os valores das estimativas resultantes
-para a velocidade da luz.  Os reultados obtidos são bastante próximos do valor
-definido no SI.
+para a velocidade da luz.  Os resultados obtidos são todos relativamente
+próximos do valor definido no SI.
 \begin{table}[htb]
   \begin{center}
     \begin{tabular}{cccccc}
@@ -245,18 +265,18 @@ $3,928\times10^8$\,m/s.}
 O valor da velocidade da luz obtido a partir do declive da reta de ajuste é
 $3,928\times10^8\,$m/s.
 
-\section{Questões}
-\begin{enumerate}
-  \item A que se deve a inexatidão destes resultados? A erros do stellarium? Ou
-    a algum efeito ou correção observacional que não estou a considerar?
-  \item É relevante que o método batota! seja bastante mais exato que os
-    restantes?
-  \item Como usar tabelas de efemérides (como as geradas com o sistema Horyzons
-    da NASA e JPL) para determinar os instantes das emersões e ocultaações de
-    Io?  (Ou deverei antes dizer das \emph{observações} desses efeitos?)
-\end{enumerate}
+%\section{Questões}
+%\begin{enumerate}
+%  \item A que se deve a inexatidão destes resultados? A erros do stellarium? Ou
+%    a algum efeito ou correção observacional óbvio que não estou a considerar?
+%  \item É relevante que o método batota! seja bastante mais exato que os
+%    restantes?
+%  \item Como usar tabelas de efemérides (como as geradas com o sistema Horyzons
+%    da NASA e JPL) para determinar os instantes das emersões e ocultaações de
+%    Io?  (Ou deverei antes dizer das \emph{observações} desses efeitos?)
+%\end{enumerate}
 
-\section{Período sinódico de Io no stellarium}
+%\section{Período sinódico de Io no stellarium}
 \end{document}
 
 
