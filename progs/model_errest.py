@@ -22,8 +22,8 @@ wT = 2 * PI / TT
 RI = 2.819e-3       # Io's orbital radius (UA)
 TI = 152853.5047    # Io's synodical period
 wI = 2 * PI / TI
-aT = PI     # Earth phase constant (PI-> Jupiter conjunction; 0-> Opposition)
-aI = 0.0    # Io phase constant
+aT = 0.0     # Earth phase constant (PI-> Jupiter conjunction; 0-> Opposition)
+aI = -87.8099*PI/180    # Io phase constant
 dt = 1.0
 
 
@@ -41,6 +41,7 @@ in_shadow = False
 xe = 0
 ye = 0
 te = 0
+
 
 emerg = []
 occul = []

@@ -19,4 +19,4 @@ for (i=0; i<278; i++)
 // Io's orbital sidereal period: 2547,558412 min
 // core.setDate("+2547.56 minutes")
 
-// core.output(core.getObjectInfo("Jupiter").distance+"     "+core.getObjectInfo("Io").distance)
+// core.output(core.getObjectInfo("Jupiter"));
