@@ -17,13 +17,13 @@ C2 = C**2
 RJ = 5.2            # Jupiter's orbital radius (UA)
 rJ = 6.67326E-4     # Jupiter's radius (UA)
 RT = 1.0            # Earth's orbital radius (UA)
-TT = 398.88*24*3600 # Synodic year (s)
+TT = 398.88*24*3600 # Jupiter synodic period (s)
 wT = 2 * PI / TT
 RI = 2.819e-3       # Io's orbital radius (UA)
-TI = 152853.5047    # Io's synodical period
+TI = 152853.5047    # Io's sidereal period
 wI = 2 * PI / TI
 aT = 0.0     # Earth phase constant (PI-> Jupiter conjunction; 0-> Opposition)
-aI = -87.8099*PI/180    # Io phase constant
+aI = (87.8099-180)*PI/180    # Io phase constant
 dt = 1.0
 
 
