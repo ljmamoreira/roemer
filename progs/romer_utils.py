@@ -3,10 +3,11 @@
 # November 2024
 
 import os
+import datetime as dttm
 import numpy as np
 import scipy.interpolate as intrp
 import matplotlib.pyplot as plt
-import datetime as dttm
+import requests
 from bisect import bisect_left
 
 
@@ -15,28 +16,28 @@ T = dttm.timedelta(seconds=152853.5047) # Io's orbital period in secs
 AU = 149597870700
 C = 299792458
 
-# Special dates 2025
+# Special dates for the synodic period of 2025
 OPPO = dttm.datetime(2024, 12,  7, 20, 51,  0)
 QREG = dttm.datetime(2025,  3,  2, 18, 13, 13)
 CONJ = dttm.datetime(2025,  6, 24, 15, 20, 30)
 QAPR = dttm.datetime(2025, 10, 17,  5, 30, 31)
 
 # Magnitude curves directories
-EMDIR = "../data/magc/emergences/"
-OCDIR = "../data/magc/occultations/"
+MCEMDIR = "../data/magc/emergences/"
+MCOCDIR = "../data/magc/occultations/"
 
 
 # Available emergence (regression) dates for the synodic year
 EDATES = sorted([
     dttm.date.fromisoformat(fname[2:-4])
-    for fname in os.listdir(EMDIR)
+    for fname in os.listdir(MCEMDIR)
     ])
 
 
 # Available occultation (approximation) dates for the synodic year
-IDATES = sorted([
+ODATES = sorted([
     dttm.date.fromisoformat(fname[2:-4])
-    for fname in os.listdir(OCDIR)
+    for fname in os.listdir(MCOCDIR)
     ])
 
 
@@ -133,9 +134,9 @@ def load_all(folder):
 
 
 EMERGS = [Event('e', l[0], l[1])
-            for l in load_all(EMDIR)]
+            for l in load_all(MCEMDIR)]
 OCCULS = [Event('o', l[0], l[1])
-            for l in load_all(OCDIR)]
+            for l in load_all(MCOCDIR)]
 
 
 def get_date_cbracket(dl, cd, n):
@@ -225,3 +226,47 @@ def check_magcurve(magcfile):
     plt.vlines(ctsecs,8,16)
     print("ct=",ct)
     print("cd=",cdist,"AU")
+
+
+def hrz_get_ephem(start_time, stop_time, step_size):
+    with open("hrz_script_template.txt", 'r') as file:
+        script_lines = file.readlines()
+    script_lines[-3] = script_lines[-3][:11] + "'" + str(start_time) + "'\n"
+    script_lines[-2] = script_lines[-2][:10] + "'" + str(stop_time) + "'\n"
+    script_lines[-1] = script_lines[-1][:10] + "'" + str(step_size) + "'\n"
+    with open("horizons_script.txt", 'w') as file:
+        file.writelines(script_lines)
+    with open("horizons_script.txt") as script:
+        url = 'https://ssd.jpl.nasa.gov/api/horizons_file.api'
+        r = requests.post(url, data={'format':'text'}, files={'input': script})
+    return r.text
+
+def hrz_tstamp2dttm(tstamp):
+    tspl = tstamp.split('.')
+    datehour = tspl[0]
+    if len(tspl)>1:
+        microsecs = tspl[1]
+    else:
+        microsecs = 0
+    try:
+        t = dttm.datetime.strptime(datehour,"%Y-%b-%d %H:%M:%S")
+    except ValueError:
+        t = dttm.datetime.strptime(datehour,"%Y-%m-%d %H:%M:%S")
+    t += dttm.timedelta(microseconds=int("{:06}".format(microsecs)))
+    return t
+
+def hrz_get_ctd(ephem_text):
+    # Split the ephemerides text and discard header and footer
+    etls = ephem_text.split('\n')
+    ephem = etls[etls.index('$$SOE')+1: etls.index('$$EOE')]
+    # Find lines of start and finish of partial imersion in Jupiter's shadow
+    strt_line = next(l for l in ephem if "/P" in l.upper())
+    stop_line = next(l for l in ephem[::-1] if "/P" in l.upper())
+    part_ephem = ephem[ephem.index(strt_line): ephem.index(stop_line)+1]
+    # Get the time and distance at middle occultation
+    tdtm = [hrz_tstamp2dttm(line[1:25]) for line in part_ephem]
+    ct = tdtm[0] + (tdtm[-1] - tdtm[0]) / 2
+    tsecs = np.array([(t-tdtm[0]).total_seconds() for t in tdtm])
+    d = np.array([float(line.split()[-1]) for line in part_ephem])
+    cd = intrp.Akima1DInterpolator(tsecs, d)((ct-tdtm[0]).total_seconds())
+    return ct, cd
